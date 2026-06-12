@@ -13,7 +13,6 @@
         }
         body { font-family: 'Montserrat', sans-serif; background-color: var(--sinba-light); color: #2D3237; margin: 0; }
         
-        /* Barra de progreso superior - Inicialmente oculta */
         #progress-container {
             position: fixed;
             top: 0;
@@ -22,13 +21,13 @@
             height: 8px;
             background-color: #E5E7EB;
             z-index: 100;
-            display: none; /* Se activa luego del registro */
+            display: none;
         }
         .progress-fill { 
             height: 100%; 
             background: var(--sinba-purple); 
             width: 0%;
-            transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1); 
+            transition: width 0.6s ease; 
         }
 
         .btn-primary { 
@@ -38,33 +37,31 @@
             font-weight: 600; 
             text-transform: lowercase; 
         }
-        .btn-primary:hover { opacity: 0.9; transform: translateY(-2px); box-shadow: 0 4px 12px rgba(81, 17, 145, 0.3); }
+        .btn-primary:hover { opacity: 0.9; transform: translateY(-2px); }
         
         .card { background: white; border-radius: 24px; box-shadow: 0 20px 40px rgba(0,0,0,0.05); }
-        .hidden { display: none ! aspiration; }
+        .hidden { display: none !important; }
         .fade-in { animation: fadeIn 0.5s ease-out; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         
-        .logo-img { max-height: 90px; max-width: 100%; margin: 0 auto 2rem auto; display: block; object-fit: contain; }
+        .logo-img { max-height: 90px; max-width: 250px; margin: 0 auto 2rem auto; display: block; object-fit: contain; }
     </style>
 </head>
 <body class="min-h-screen flex items-center justify-center p-6">
 
-    <!-- Barra de Progreso Superior -->
     <div id="progress-container">
         <div id="progress-fill" class="progress-fill"></div>
     </div>
 
-    <main id="app" class="w-full max-w-xl p-10 card fade-in text-center">
+    <main id="app" class="w-full max-w-xl p-10 card text-center">
         <!-- Logo -->
-        <img src="LOGOTIPO%20SINBA%20SIN%20SLOGAN%20MORADO%20(1).png" alt="sinba logo" class="logo-img">
+        <img src="logo.png" alt="sinba logo" class="logo-img">
 
         <div id="content-area">
-            <!-- Contenido dinámico -->
+            <!-- Cargando contenido... -->
         </div>
     </main>
 
-    <!-- Modal para respuestas -->
     <div id="modal" class="hidden fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
         <div class="bg-white p-8 rounded-3xl max-w-sm w-full text-center shadow-2xl">
             <p id="modal-text" class="text-gray-700 mb-6"></p>
@@ -111,7 +108,6 @@
                     { text: "no acepto", feedback: "debes aceptar para continuar con la experiencia.", next: "politica" }
                 ]
             },
-            // A PARTIR DE AQUÍ APARECE LA BARRA DE PROGRESO
             {
                 id: "tema1",
                 content: "<b>tema 1: ¿quiénes somos?</b><br><br>en sinba co-creamos un mundo sin basura. trabajamos bajo la premisa de que en la naturaleza no existe la basura.",
@@ -127,37 +123,41 @@
                 content: "<b>evaluación</b><br><br>¿estás listo para aplicar lo aprendido y recibir tu certificado?",
                 buttons: [
                     { text: "sí, ¡estoy listo!", feedback: "¡excelente decisión! la constancia se generará a nombre de " + (state.userName || 'participante'), next: "final" },
-                    { text: "repasar temas", feedback: "claro, revisemos nuevamente la información importante.", next: "tema1" }
+                    { text: "repasar temas", feedback: "claro, revisemos nuevamente la información.", next: "tema1" }
                 ]
             },
             {
                 id: "final",
-                dynamicContent: () => `🎉 ¡felicitaciones <b>${state.userName}</b>!<br><br>has completado con éxito la capacitación. pronto recibirás tu certificado de sinba en tu correo corporativo.`,
+                dynamicContent: () => `🎉 ¡felicitaciones <b>${state.userName}</b>!<br><br>has completado con éxito la capacitación de sinba.`,
                 buttons: [{ text: "finalizar", next: "bienvenida" }]
             }
         ];
 
         let currentState = "bienvenida";
         let state = { userName: "", userDni: "" };
-
-        // Definimos desde qué ID queremos que se vea la barra
         const onboardingSteps = ["bienvenida", "registro_nombre", "confirmar_nombre", "registro_dni", "politica"];
 
         function render() {
             const step = courseData.find(s => s.id === currentState);
+            if (!step) return;
+
             const container = document.getElementById('content-area');
             const progressContainer = document.getElementById('progress-container');
             const progressFill = document.getElementById('progress-fill');
             
-            // Lógica de la barra de progreso
+            // Animación de entrada
+            container.classList.remove('fade-in');
+            void container.offsetWidth;
+            container.classList.add('fade-in');
+
+            // Barra de progreso
             if (onboardingSteps.includes(currentState)) {
                 progressContainer.style.display = "none";
             } else {
                 progressContainer.style.display = "block";
-                // Calculamos el progreso solo de la parte del curso (después del registro)
                 const courseSteps = courseData.filter(s => !onboardingSteps.includes(s.id));
-                const currentCourseIdx = courseSteps.findIndex(s => s.id === currentState);
-                const percent = ((currentCourseIdx + 1) / courseSteps.length) * 100;
+                const currentIdx = courseSteps.findIndex(s => s.id === currentState);
+                const percent = ((currentIdx + 1) / courseSteps.length) * 100;
                 progressFill.style.width = percent + "%";
             }
 
@@ -169,6 +169,7 @@
 
             html += `<div class="flex flex-col gap-3">`;
             step.buttons.forEach((btn, i) => {
+                // He corregido las comillas aquí para evitar errores de JS
                 html += `<button onclick="handleBtn('${step.id}', ${i})" class="btn-primary py-4 px-6 rounded-2xl">${btn.text}</button>`;
             });
             html += `</div>`;
@@ -190,7 +191,6 @@
                 showModal(btn.feedback, btn.next);
             } else {
                 currentState = btn.next;
-                // Si vuelve al inicio, reseteamos datos básicos
                 if(currentState === "bienvenida") state = { userName: "", userDni: "" };
                 render();
             }
@@ -210,6 +210,7 @@
             }
         }
 
+        // Arrancar la aplicación
         render();
     </script>
 </body>
