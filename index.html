@@ -6,19 +6,73 @@
     <title>Capacitación | sinba</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
-    <style>
-        :root { --purple: #511191; --light: #F9FAFB; }
-        body { font-family: 'Montserrat', sans-serif; background-color: var(--light); color: #333; margin: 0; padding: 0; }
+   <style>
+        :root { 
+            --purple: #511191; 
+            --light: #F9FAFB; 
+        }
+        body { 
+            font-family: 'Montserrat', sans-serif; 
+            background-color: var(--light); 
+            color: #333; 
+            margin: 0; 
+            padding: 0; 
+        }
+        
+        /* Ajuste del Logo: Centrado y Tamaño */
+        .logo { 
+            max-width: 200px; /* Tamaño horizontal controlado */
+            max-height: 80px; /* Tamaño vertical controlado */
+            display: block; 
+            margin: 0 auto 30px auto; /* El 'auto' a los lados lo centra */
+            object-fit: contain;
+        }
+
         #progreso-bar { position: fixed; top: 0; left: 0; width: 100%; height: 6px; background: #eee; z-index: 1000; display: none; }
         #progreso-fill { height: 100%; background: var(--purple); width: 0%; transition: width 0.4s; }
-        .contenedor { background: white; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); width: 100%; max-width: 500px; padding: 40px; text-align: center; }
-        .btn { background: var(--purple); color: white; padding: 15px 25px; border-radius: 12px; border: none; font-weight: 600; cursor: pointer; width: 100%; margin-top: 10px; font-size: 16px; transition: 0.3s; }
+        
+        .contenedor { 
+            background: white; 
+            border-radius: 24px; 
+            box-shadow: 0 10px 40px rgba(0,0,0,0.06); 
+            width: 90%; 
+            max-width: 450px; 
+            padding: 40px 30px; 
+            text-align: center; 
+            margin: 20px;
+        }
+
+        .btn { 
+            background: var(--purple); 
+            color: white; 
+            padding: 16px 25px; 
+            border-radius: 14px; 
+            border: none; 
+            font-weight: 600; 
+            cursor: pointer; 
+            width: 100%; 
+            margin-top: 10px; 
+            font-size: 16px; 
+            transition: 0.3s;
+            text-transform: lowercase; /* Estilo sinba */
+        }
         .btn:hover { opacity: 0.9; transform: translateY(-2px); }
-        .input-text { width: 100%; padding: 15px; border: 2px solid #eee; border-radius: 12px; margin-bottom: 20px; text-align: center; font-size: 16px; outline: none; }
+        
+        .input-text { 
+            width: 100%; 
+            padding: 15px; 
+            border: 2px solid #f0f0f0; 
+            border-radius: 12px; 
+            margin-bottom: 20px; 
+            text-align: center; 
+            font-size: 16px; 
+            outline: none; 
+            box-sizing: border-box;
+        }
         .input-text:focus { border-color: var(--purple); }
-        .logo { max-height: 80px; margin-bottom: 30px; }
+        
         .fade { animation: fadeIn 0.5s; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body class="min-h-screen flex items-center justify-center p-4">
