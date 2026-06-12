@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inducción Sinba</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root { --sinba-green: #00A651; --sinba-yellow: #FFD100; --sinba-dark: #2D3237; }
+        body { font-family: 'Montserrat', sans-serif; background-color: #F3F4F6; color: var(--sinba-dark); margin: 0; }
+        .bg-sinba-green { background-color: var(--sinba-green); }
+        .text-sinba-green { color: var(--sinba-green); }
+        .btn-primary { background-color: var(--sinba-yellow); transition: all 0.2s; font-weight: 600; text-transform: lowercase; }
+        .btn-primary:hover { background-color: var(--sinba-dark); color: white; transform: translateY(-2px); }
+        .card { background: white; border-radius: 24px; box-shadow: 0 20px 40px rgba(0,0,0,0.05); }
+        .progress-fill { height: 100%; background: var(--sinba-green); transition: width 0.5s ease; }
+        .hidden { display: none; }
+        .fade-in { animation: fadeIn 0.5s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-6">
+
+    <!-- Barra de Progreso -->
+    <div class="fixed top-0 left-0 w-full h-2 bg-gray-200">
+        <div id="progress-fill" class="progress-fill" style="width: 0%"></div>
+    </div>
+
+    <main id="app" class="w-full max-w-xl p-10 card fade-in text-center">
+        <!-- Logo Sinba -->
+        <div class="mb-8 text-3xl font-bold tracking-tighter">
+            <span class="text-sinba-green">sin</span><span class="text-sinba-yellow">ba</span>
+        </div>
+
+        <div id="content-area">
+            <!-- El contenido cambia dinámicamente -->
+        </div>
+    </main>
+
+    <!-- Modal para respuestas (Columna C) -->
+    <div id="modal" class="hidden fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+        <div class="bg-white p-8 rounded-3xl max-w-sm w-full text-center shadow-2xl">
+            <p id="modal-text" class="text-gray-700 mb-6"></p>
+            <button onclick="closeModal()" class="btn-primary px-8 py-3 rounded-xl w-full">continuar</button>
+        </div>
+    </div>
+
+    <script>
+        // DATOS DEL GUION Y EXCEL
+        const courseData = [
+            {
+                id: "bienvenida",
+                content: "¡hola!👋 ¿te imaginas un mundo sin basura, donde todos los materiales se reutilizan? <br><br> nosotros en <b>sinba</b> creemos que es posible. en este curso aprenderás cómo lograrlo.",
+                buttons: [{ text: "registrarme", next: "registro_nombre" }]
+            },
+            {
+                id: "registro_nombre",
+                type: "input",
+                content: "🟩⬜⬜⬜⬜⬜<br><br>¡muy bien! por favor, <b>escribe tu nombre y apellido completo</b> para tu constancia.",
+                placeholder: "Tu nombre aquí...",
+                key: "userName",
+                buttons: [{ text: "continuar", next: "confirmar_nombre" }]
+            },
+            {
+                id: "confirmar_nombre",
+                dynamicContent: () => `🟩🟩⬜⬜⬜<br><br>¿te parece bien que me dirija a ti como <b>${state.userName}</b>?`,
+                buttons: [
+                    { text: "sí", next: "registro_dni" },
+                    { text: "no", feedback: "no te preocupes, vuelve a escribir tu nombre. ✍️", next: "registro_nombre" }
+                ]
+            },
+            {
+                id: "registro_dni",
+                type: "input",
+                content: "por favor, escribe los <b>8 dígitos de tu DNI</b>. 📄",
+                placeholder: "00000000",
+                key: "userDni",
+                buttons: [{ text: "validar dni", next: "politica" }]
+            },
+            {
+                id: "politica",
+                content: "antes de seguir, ¿aceptas nuestra política de confidencialidad?<br><br><small class='text-blue-500'>musa.la/politica-de-privacidad/</small>",
+                buttons: [
+                    { text: "acepto", next: "tema1" },
+                    { text: "no acepto", feedback: "debes aceptar para continuar con la experiencia.", next: "politica" }
+                ]
+            },
+            {
+                id: "tema1",
+                content: "<b>tema 1: ¿quiénes somos?</b><br><br>en sinba co-creamos un mundo sin basura. ¿sabías que el 90% de los residuos hoy terminan en lugares inadecuados?",
+                buttons: [{ text: "continuar al tema 2", next: "tema2" }]
+            },
+            {
+                id: "tema2",
+                content: "<b>tema 2: empresas sin basura</b><br><br>la etapa 1 consiste en separar los residuos en la fuente: orgánicos, reciclables y otros.",
+                buttons: [{ text: "entendido", next: "evaluacion" }]
+            },
+            {
+                id: "evaluacion",
+                content: "<b>evaluación final</b><br><br>¿cuál es el color que representa a los residuos orgánicos en sinba?",
+                buttons: [
+                    { text: "verde", feedback: "¡correcto! (respuesta columna C)", next: "final" },
+                    { text: "rojo", feedback: "incorrecto. recuerda revisar el material del tema 2.", next: "tema2" }
+                ]
+            },
+            {
+                id: "final",
+                dynamicContent: () => `🎉 ¡felicitaciones <b>${state.userName}</b>! has completado la inducción.`,
+                buttons: [{ text: "finalizar", next: "bienvenida" }]
+            }
+        ];
+
+        let currentState = "bienvenida";
+        let state = { userName: "", userDni: "" };
+
+        function render() {
+            const step = courseData.find(s => s.id === currentState);
+            const container = document.getElementById('content-area');
+            const progress = document.getElementById('progress-fill');
+            
+            // Actualizar barra
+            const index = courseData.indexOf(step);
+            progress.style.width = ((index / (courseData.length - 1)) * 100) + "%";
+
+            let html = `<p class="text-lg mb-8 leading-relaxed">${step.dynamicContent ? step.dynamicContent() : step.content}</p>`;
+
+            if (step.type === "input") {
+                html += `<input type="text" id="main-input" placeholder="${step.placeholder}" class="w-full p-4 border-2 border-gray-100 rounded-2xl mb-6 text-center outline-none focus:border-sinba-green transition-all font-semibold">`;
+            }
+
+            html += `<div class="flex flex-col gap-3">`;
+            step.buttons.forEach((btn, i) => {
+                html += `<button onclick="handleBtn(${index}, ${i})" class="btn-primary py-4 px-6 rounded-2xl">${btn.text}</button>`;
+            });
+            html += `</div>`;
+
+            container.innerHTML = html;
+        }
+
+        function handleBtn(stepIdx, btnIdx) {
+            const step = courseData[stepIdx];
+            const btn = step.buttons[btnIdx];
+
+            if (step.type === "input") {
+                const inputVal = document.getElementById('main-input').value;
+                if (!inputVal) return;
+                state[step.key] = inputVal;
+            }
+
+            if (btn.feedback) {
+                showModal(btn.feedback, btn.next);
+            } else {
+                currentState = btn.next;
+                render();
+            }
+        }
+
+        function showModal(text, next) {
+            document.getElementById('modal-text').innerText = text;
+            document.getElementById('modal').classList.remove('hidden');
+            window.nextStep = next;
+        }
+
+        function closeModal() {
+            document.getElementById('modal').classList.add('hidden');
+            if (window.nextStep) {
+                currentState = window.nextStep;
+                render();
+            }
+        }
+
+        render();
+    </script>
+</body>
+</html>
