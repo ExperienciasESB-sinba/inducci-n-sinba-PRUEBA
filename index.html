@@ -3,42 +3,68 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Inducción Sinba</title>
+    <title>Inducción | sinba</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
-        :root { --sinba-green: #00A651; --sinba-yellow: #FFD100; --sinba-dark: #2D3237; }
-        body { font-family: 'Montserrat', sans-serif; background-color: #F3F4F6; color: var(--sinba-dark); margin: 0; }
-        .bg-sinba-green { background-color: var(--sinba-green); }
-        .text-sinba-green { color: var(--sinba-green); }
-        .btn-primary { background-color: var(--sinba-yellow); transition: all 0.2s; font-weight: 600; text-transform: lowercase; }
-        .btn-primary:hover { background-color: var(--sinba-dark); color: white; transform: translateY(-2px); }
+        :root { 
+            --sinba-purple: #511191; 
+            --sinba-light: #F9FAFB; 
+        }
+        body { font-family: 'Montserrat', sans-serif; background-color: var(--sinba-light); color: #2D3237; margin: 0; }
+        
+        /* Barra de progreso superior - Inicialmente oculta */
+        #progress-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 8px;
+            background-color: #E5E7EB;
+            z-index: 100;
+            display: none; /* Se activa luego del registro */
+        }
+        .progress-fill { 
+            height: 100%; 
+            background: var(--sinba-purple); 
+            width: 0%;
+            transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1); 
+        }
+
+        .btn-primary { 
+            background-color: var(--sinba-purple); 
+            color: white;
+            transition: all 0.2s; 
+            font-weight: 600; 
+            text-transform: lowercase; 
+        }
+        .btn-primary:hover { opacity: 0.9; transform: translateY(-2px); box-shadow: 0 4px 12px rgba(81, 17, 145, 0.3); }
+        
         .card { background: white; border-radius: 24px; box-shadow: 0 20px 40px rgba(0,0,0,0.05); }
-        .progress-fill { height: 100%; background: var(--sinba-green); transition: width 0.5s ease; }
-        .hidden { display: none; }
+        .hidden { display: none ! aspiration; }
         .fade-in { animation: fadeIn 0.5s ease-out; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .logo-img { max-height: 90px; max-width: 100%; margin: 0 auto 2rem auto; display: block; object-fit: contain; }
     </style>
 </head>
 <body class="min-h-screen flex items-center justify-center p-6">
 
-    <!-- Barra de Progreso -->
-    <div class="fixed top-0 left-0 w-full h-2 bg-gray-200">
-        <div id="progress-fill" class="progress-fill" style="width: 0%"></div>
+    <!-- Barra de Progreso Superior -->
+    <div id="progress-container">
+        <div id="progress-fill" class="progress-fill"></div>
     </div>
 
     <main id="app" class="w-full max-w-xl p-10 card fade-in text-center">
-        <!-- Logo Sinba -->
-        <div class="mb-8 text-3xl font-bold tracking-tighter">
-            <span class="text-sinba-green">sin</span><span class="text-sinba-yellow">ba</span>
-        </div>
+        <!-- Logo -->
+        <img src="LOGOTIPO%20SINBA%20SIN%20SLOGAN%20MORADO%20(1).png" alt="sinba logo" class="logo-img">
 
         <div id="content-area">
-            <!-- El contenido cambia dinámicamente -->
+            <!-- Contenido dinámico -->
         </div>
     </main>
 
-    <!-- Modal para respuestas (Columna C) -->
+    <!-- Modal para respuestas -->
     <div id="modal" class="hidden fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
         <div class="bg-white p-8 rounded-3xl max-w-sm w-full text-center shadow-2xl">
             <p id="modal-text" class="text-gray-700 mb-6"></p>
@@ -47,11 +73,10 @@
     </div>
 
     <script>
-        // DATOS DEL GUION Y EXCEL
         const courseData = [
             {
                 id: "bienvenida",
-                content: "¡hola!👋 ¿te imaginas un mundo sin basura, donde todos los materiales se reutilizan? <br><br> nosotros en <b>sinba</b> creemos que es posible. en este curso aprenderás cómo lograrlo.",
+                content: "¡Hola!👋 ¿Te imaginas un mundo sin basura, donde todos los materiales se reutilizan y no dañan el medio ambiente? <br><br> En este micro curso aprenderás cómo segregar correctamente en tu empresa. Al finalizar, recibirás un certificado de capacitación. <br><br> ¿Listo para iniciar? Presiona el botón para registrarte 👇",
                 buttons: [{ text: "registrarme", next: "registro_nombre" }]
             },
             {
@@ -80,33 +105,34 @@
             },
             {
                 id: "politica",
-                content: "antes de seguir, ¿aceptas nuestra política de confidencialidad?<br><br><small class='text-blue-500'>musa.la/politica-de-privacidad/</small>",
+                content: "antes de seguir, ¿aceptas nuestra política de confidencialidad?<br><br><small class='text-blue-500 underline'>musa.la/politica-de-privacidad/</small>",
                 buttons: [
                     { text: "acepto", next: "tema1" },
                     { text: "no acepto", feedback: "debes aceptar para continuar con la experiencia.", next: "politica" }
                 ]
             },
+            // A PARTIR DE AQUÍ APARECE LA BARRA DE PROGRESO
             {
                 id: "tema1",
-                content: "<b>tema 1: ¿quiénes somos?</b><br><br>en sinba co-creamos un mundo sin basura. ¿sabías que el 90% de los residuos hoy terminan en lugares inadecuados?",
+                content: "<b>tema 1: ¿quiénes somos?</b><br><br>en sinba co-creamos un mundo sin basura. trabajamos bajo la premisa de que en la naturaleza no existe la basura.",
                 buttons: [{ text: "continuar al tema 2", next: "tema2" }]
             },
             {
                 id: "tema2",
-                content: "<b>tema 2: empresas sin basura</b><br><br>la etapa 1 consiste en separar los residuos en la fuente: orgánicos, reciclables y otros.",
+                content: "<b>tema 2: segregación en la fuente</b><br><br>separar correctamente permite que los materiales se conviertan en nuevos recursos. usamos tachos específicos para orgánicos y aprovechables.",
                 buttons: [{ text: "entendido", next: "evaluacion" }]
             },
             {
                 id: "evaluacion",
-                content: "<b>evaluación final</b><br><br>¿cuál es el color que representa a los residuos orgánicos en sinba?",
+                content: "<b>evaluación</b><br><br>¿estás listo para aplicar lo aprendido y recibir tu certificado?",
                 buttons: [
-                    { text: "verde", feedback: "¡correcto! (respuesta columna C)", next: "final" },
-                    { text: "rojo", feedback: "incorrecto. recuerda revisar el material del tema 2.", next: "tema2" }
+                    { text: "sí, ¡estoy listo!", feedback: "¡excelente decisión! la constancia se generará a nombre de " + (state.userName || 'participante'), next: "final" },
+                    { text: "repasar temas", feedback: "claro, revisemos nuevamente la información importante.", next: "tema1" }
                 ]
             },
             {
                 id: "final",
-                dynamicContent: () => `🎉 ¡felicitaciones <b>${state.userName}</b>! has completado la inducción.`,
+                dynamicContent: () => `🎉 ¡felicitaciones <b>${state.userName}</b>!<br><br>has completado con éxito la capacitación. pronto recibirás tu certificado de sinba en tu correo corporativo.`,
                 buttons: [{ text: "finalizar", next: "bienvenida" }]
             }
         ];
@@ -114,32 +140,44 @@
         let currentState = "bienvenida";
         let state = { userName: "", userDni: "" };
 
+        // Definimos desde qué ID queremos que se vea la barra
+        const onboardingSteps = ["bienvenida", "registro_nombre", "confirmar_nombre", "registro_dni", "politica"];
+
         function render() {
             const step = courseData.find(s => s.id === currentState);
             const container = document.getElementById('content-area');
-            const progress = document.getElementById('progress-fill');
+            const progressContainer = document.getElementById('progress-container');
+            const progressFill = document.getElementById('progress-fill');
             
-            // Actualizar barra
-            const index = courseData.indexOf(step);
-            progress.style.width = ((index / (courseData.length - 1)) * 100) + "%";
+            // Lógica de la barra de progreso
+            if (onboardingSteps.includes(currentState)) {
+                progressContainer.style.display = "none";
+            } else {
+                progressContainer.style.display = "block";
+                // Calculamos el progreso solo de la parte del curso (después del registro)
+                const courseSteps = courseData.filter(s => !onboardingSteps.includes(s.id));
+                const currentCourseIdx = courseSteps.findIndex(s => s.id === currentState);
+                const percent = ((currentCourseIdx + 1) / courseSteps.length) * 100;
+                progressFill.style.width = percent + "%";
+            }
 
             let html = `<p class="text-lg mb-8 leading-relaxed">${step.dynamicContent ? step.dynamicContent() : step.content}</p>`;
 
             if (step.type === "input") {
-                html += `<input type="text" id="main-input" placeholder="${step.placeholder}" class="w-full p-4 border-2 border-gray-100 rounded-2xl mb-6 text-center outline-none focus:border-sinba-green transition-all font-semibold">`;
+                html += `<input type="text" id="main-input" placeholder="${step.placeholder}" class="w-full p-4 border-2 border-gray-100 rounded-2xl mb-6 text-center outline-none focus:border-purple-300 transition-all font-semibold">`;
             }
 
             html += `<div class="flex flex-col gap-3">`;
             step.buttons.forEach((btn, i) => {
-                html += `<button onclick="handleBtn(${index}, ${i})" class="btn-primary py-4 px-6 rounded-2xl">${btn.text}</button>`;
+                html += `<button onclick="handleBtn('${step.id}', ${i})" class="btn-primary py-4 px-6 rounded-2xl">${btn.text}</button>`;
             });
             html += `</div>`;
 
             container.innerHTML = html;
         }
 
-        function handleBtn(stepIdx, btnIdx) {
-            const step = courseData[stepIdx];
+        function handleBtn(stepId, btnIdx) {
+            const step = courseData.find(s => s.id === stepId);
             const btn = step.buttons[btnIdx];
 
             if (step.type === "input") {
@@ -152,6 +190,8 @@
                 showModal(btn.feedback, btn.next);
             } else {
                 currentState = btn.next;
+                // Si vuelve al inicio, reseteamos datos básicos
+                if(currentState === "bienvenida") state = { userName: "", userDni: "" };
                 render();
             }
         }
