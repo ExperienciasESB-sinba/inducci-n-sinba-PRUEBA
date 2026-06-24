@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Capacitación | sinba</title>
+    <title>Inducción | sinba</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
     <style>
@@ -15,17 +15,16 @@
         .timeline-line { position: absolute; top: 15px; left: 40px; right: 40px; height: 2px; background: var(--gray); z-index: 1; }
         .timeline-progress { position: absolute; top: 15px; left: 40px; height: 2px; background: var(--purple); z-index: 2; transition: width 0.4s ease; width: 0%; }
         .step-item { position: relative; z-index: 3; display: flex; flex-direction: column; align-items: center; width: 60px; cursor: pointer; transition: 0.3s; }
-        .step-item.disabled { cursor: not-allowed; opacity: 0.6; }
+        .step-item.disabled { cursor: not-allowed; opacity: 0.5; }
         .step-circle { width: 30px; height: 30px; border-radius: 50%; background: white; border: 2px solid var(--gray); display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 12px; margin-bottom: 5px; transition: 0.3s; }
-        .step-label { font-size: 10px; text-align: center; font-weight: 600; text-transform: uppercase; color: var(--gray); }
-        
+        .step-label { font-size: 9px; text-align: center; font-weight: 600; text-transform: uppercase; color: var(--gray); }
         .step-item.active .step-circle { border-color: var(--purple); background: var(--purple); color: white; }
         .step-item.active .step-label { color: var(--purple); }
         .step-item.completed .step-circle { background: var(--purple); border-color: var(--purple); color: white; }
 
         /* Card Principal */
         .app-card { background: white; border-radius: 24px; box-shadow: 0 10px 40px rgba(0,0,0,0.06); width: 100%; max-width: 500px; min-height: 550px; display: flex; flex-direction: column; position: relative; margin: 0 auto 40px auto; }
-        .content-body { padding: 40px 30px 100px 30px; flex-grow: 1; text-align: center; }
+        .content-body { padding: 30px 25px 100px 25px; flex-grow: 1; text-align: center; }
         
         /* Botones */
         .btn-sinba { background: var(--purple); color: white; padding: 16px 20px; border-radius: 14px; border: none; font-weight: 600; cursor: pointer; width: 100%; margin-top: 10px; font-size: 15px; transition: 0.2s; text-transform: lowercase; }
@@ -36,7 +35,7 @@
         .flip-card { perspective: 1000px; width: 100%; height: 110px; margin-bottom: 12px; cursor: pointer; border: none; background: none; padding: 0; }
         .flip-card-inner { position: relative; width: 100%; height: 100%; transition: transform 0.6s; transform-style: preserve-3d; }
         .flip-card.is-flipped .flip-card-inner { transform: rotateY(180deg); }
-        .flip-card-front, .flip-card-back { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; border-radius: 14px; display: flex; align-items: center; justify-content: center; padding: 15px; font-weight: 600; font-size: 14px; color: white; }
+        .flip-card-front, .flip-card-back { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; border-radius: 14px; display: flex; align-items: center; justify-content: center; padding: 15px; font-weight: 600; font-size: 13px; color: white; }
         .flip-card-front { background-color: var(--purple); text-transform: lowercase; }
         .flip-card-back { transform: rotateY(180deg); font-size: 12px; font-weight: 400; text-align: left; flex-direction: column; align-items: flex-start; }
         .bg-correct { background-color: var(--correct); }
@@ -45,8 +44,8 @@
         .nav-footer { position: absolute; bottom: 0; left: 0; width: 100%; height: 70px; border-top: 1px solid #f0f0f0; display: flex; justify-content: space-between; align-items: center; padding: 0 20px; background: white; border-radius: 0 0 24px 24px; }
         .nav-btn { color: var(--purple); font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 5px; font-size: 13px; padding: 8px; border-radius: 8px; }
 
-        .logo { max-height: 60px; max-width: 180px; margin: 0 auto 25px auto; display: block; object-fit: contain; }
-        .img-content { width: 100%; border-radius: 15px; margin: 15px 0; object-fit: cover; }
+        .logo { max-height: 50px; margin: 0 auto 20px auto; display: block; object-fit: contain; }
+        .img-content { width: 100%; border-radius: 15px; margin: 15px 0; max-height: 250px; object-fit: contain; background: #f9f9f9; }
         .video-container { position: relative; padding-bottom: 56.25%; height: 0; margin: 15px 0; border-radius: 15px; overflow: hidden; background: #000; }
         .video-container iframe { position: absolute; top:0; left: 0; width: 100%; height: 100%; }
         
@@ -61,32 +60,15 @@
     <div class="timeline-container" id="timeline">
         <div class="timeline-line"></div>
         <div class="timeline-progress" id="timeline-progress"></div>
-        
-        <div class="step-item" onclick="jumpTo('intro')" id="step-1">
-            <div class="step-circle">1</div>
-            <div class="step-label">Datos</div>
-        </div>
-        <div class="step-item" onclick="jumpTo('tema1_1')" id="step-2">
-            <div class="step-circle">2</div>
-            <div class="step-label">Tema 1</div>
-        </div>
-        <div class="step-item" onclick="jumpTo('tema2_1')" id="step-3">
-            <div class="step-circle">3</div>
-            <div class="step-label">Tema 2</div>
-        </div>
-        <div class="step-item" onclick="jumpTo('tema3_video')" id="step-4">
-            <div class="step-circle">4</div>
-            <div class="step-label">Tema 3</div>
-        </div>
-        <div class="step-item disabled" id="step-5">
-            <div class="step-circle">5</div>
-            <div class="step-label">Test</div>
-        </div>
+        <div class="step-item" id="step-1"><div class="step-circle">1</div><div class="step-label">Datos</div></div>
+        <div class="step-item" id="step-2"><div class="step-circle">2</div><div class="step-label">Tema 1</div></div>
+        <div class="step-item" id="step-3"><div class="step-circle">3</div><div class="step-label">Tema 2</div></div>
+        <div class="step-item" id="step-4"><div class="step-circle">4</div><div class="step-label">Tema 3</div></div>
+        <div class="step-item disabled" id="step-5"><div class="step-circle">5</div><div class="step-label">Test</div></div>
     </div>
 
     <div class="app-card">
         <div class="content-body fade" id="app-content"></div>
-        
         <div class="nav-footer" id="main-nav" style="display: none;">
             <div class="nav-btn" onclick="goBack()"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M15 19l-7-7 7-7"></path></svg> anterior</div>
             <div class="nav-btn" onclick="goHome()"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg></div>
@@ -96,42 +78,84 @@
     <script>
         let state = { step: "intro", history: [], userName: "", userDni: "", score: 0, testAttempts: 0 };
 
-        // Definición de las fases para la línea de tiempo
         const phases = {
             "datos": ["intro", "registro", "confirmacion", "politica", "ruta"],
-            "tema1": ["tema1_1", "tema1_org", "tema1_rec", "practica1", "tema1_gen"],
-            "tema2": ["tema2_1", "tema2_bolsas", "tema2_acopio"],
-            "tema3": ["tema3_video", "tema3_practica"],
+            "tema1": ["tema1_1", "tema1_org", "tema1_rec", "practica1", "tema1_tips", "tema1_gen"],
+            "tema2": ["tema2_1", "tema2_bolsas", "tema2_bolsas_res", "tema2_acopio"],
+            "tema3": ["tema3_video", "tema3_practica", "tema3_fin"],
             "test": ["test_intro", "q1", "q2", "q3", "q4", "q5", "resultado"]
         };
 
         const steps = {
-            "intro": { logo: true, content: `¡Hola!👋 ¿Te imaginas un mundo sin basura?<br><br>En este micro curso aprenderás cómo segregar correctamente en tu empresa.`, buttons: [{ text: "registrarme", next: "registro" }] },
-            "registro": { logo: true, content: `🟩⬜⬜⬜⬜⬜<br>Escribe tu nombre completo y DNI para tu certificado.`, inputs: [{ id: "n", placeholder: "Nombre", key: "userName" }, { id: "d", placeholder: "DNI", key: "userDni" }], buttons: [{ text: "continuar", next: "confirmacion" }] },
-            "confirmacion": { logo: true, dynamicContent: () => `🟩🟩⬜⬜⬜<br>¿Datos correctos?<br><b>${state.userName}</b> - DNI: ${state.userDni}`, buttons: [{ text: "sí", next: "politica" }, { text: "no", next: "registro" }] },
-            "politica": { content: `musa.la/politica-de-privacidad/`, buttons: [{ text: "acepto", next: "ruta" }, { text: "no acepto", feedback: "Debes aceptar." }] },
+            "intro": { logo: true, content: `¡Hola!👋 ¿Te imaginas un mundo sin basura, donde todos los materiales se reutilizan?<br><br>En este micro curso aprenderás cómo segregar correctamente en tu empresa. Al finalizar, recibirás un certificado.`, buttons: [{ text: "registrarme", next: "registro" }] },
+            "registro": { logo: true, content: `🟩⬜⬜⬜⬜⬜<br><br>¡Muy bien! Por favor, escribe tu nombre y apellido completo y tu DNI para tu certificado.`, inputs: [{ id: "n", placeholder: "Nombre y Apellido", key: "userName" }, { id: "d", placeholder: "DNI", key: "userDni" }], buttons: [{ text: "continuar", next: "confirmacion" }] },
+            "confirmacion": { logo: true, dynamicContent: () => `🟩🟩⬜⬜⬜<br><br>¿Te parece bien que usemos estos datos?<br><b>${state.userName}</b><br>DNI: ${state.userDni}`, buttons: [{ text: "sí, está bien", next: "politica" }, { text: "no, corregir", next: "registro" }] },
+            "politica": { content: `Antes de empezar, ¿aceptas nuestra política de confidencialidad?<br><br>musa.la/politica-de-privacidad/`, buttons: [{ text: "acepto", next: "ruta" }, { text: "no acepto", feedback: "Es necesario aceptar para continuar.", next: "politica" }] },
             "ruta": { content: `<b>Ruta de aprendizaje</b>`, image: "Imagen1.png", buttons: [{ text: "¡empecemos!", next: "tema1_1" }] },
             
-            "tema1_1": { content: `<b>Tema 1: ¿Cómo debo segregar?</b>`, image: "Imagen2.png", buttons: [{ text: "continuar", next: "tema1_org" }] },
-            "tema1_org": { content: `🌱 <b>Residuos orgánicos (tacho marrón)</b>`, video: "https://www.youtube.com/embed/Ejemplo1", buttons: [{ text: "siguiente", next: "tema1_rec" }] },
-            "tema1_rec": { content: `♻️ <b>Reciclaje (tacho verde)</b>`, video: "https://www.youtube.com/embed/Ejemplo2", buttons: [{ text: "practicar", next: "practica1" }] },
-            "practica1": { isTest: true, content: `¿Cuáles pueden ser reciclados?`, buttons: [
-                { text: "Lata con restos", isCorrect: false, feedback: "❌ No, está contaminada.", next: "tema1_gen" },
-                { text: "Botella vidrio", isCorrect: true, feedback: "✅ Correcto.", next: "tema1_gen" }
+            // TEMA 1
+            "tema1_1": { content: `<b>Tema 1: ¿Cómo debo segregar?</b><br><br>Clasificarlos correctamente permite que puedan ser reciclados, reutilizados o compostados.🌿♻️<br><br>Separa en orgánicos, reciclables y generales.`, image: "Imagen2.png", buttons: [{ text: "revisemos cada categoría", next: "tema1_org" }] },
+            "tema1_org": { content: `🌱 <b>Residuos orgánicos (tacho marrón)</b><br><br>Residuos que pueden descomponerse rápidamente ya que derivan de insumos animales o vegetales.`, video: "https://www.youtube.com/embed/VIDEO_ORG", buttons: [{ text: "continuar", next: "tema1_rec" }] },
+            "tema1_rec": { content: `♻️ <b>Reciclaje (tacho verde)</b><br><br>Materiales que pueden ser tratados para convertirse en nuevos productos: plástico, papel, cartón, metales y vidrios.`, video: "https://www.youtube.com/embed/VIDEO_REC", buttons: [{ text: "continuar", next: "practica1" }] },
+            "practica1": { isTest: true, content: `¿Cuáles de estos residuos pueden ser reciclados? Dale click a las opciones del tacho verde.`, buttons: [
+                { text: "lata con restos de atún", isCorrect: false, feedback: "⚠️ Si tiene muchos restos de comida, debe ir a la basura. Si quitamos el contenido, puede ir a reciclaje.", next: "tema1_tips" },
+                { text: "un tetrapack", isCorrect: true, feedback: "✅ Es reciclable.", next: "tema1_tips" },
+                { text: "una botella de vidrio", isCorrect: true, feedback: "✅ Es reciclable.", next: "tema1_tips" },
+                { text: "una taza", isCorrect: false, feedback: "❌ No es reciclable. Su densidad es mayor. Va a la basura.", next: "tema1_tips" }
             ]},
-            "tema1_gen": { content: `🚮 <b>Residuos generales (negro)</b>`, video: "https://www.youtube.com/embed/Ejemplo3", buttons: [{ text: "tema 2", next: "tema2_1" }] },
+            "tema1_tips": { content: `Tips para identificar reciclables:`, image: "Imagen9.png", buttons: [{ text: "continuar", next: "tema1_gen" }] },
+            "tema1_gen": { content: `🚮 <b>Residuos generales o basura (tacho negro)</b><br><br>Envases sucios, contaminados o degradados que no podemos reaprovechar.`, video: "https://www.youtube.com/embed/VIDEO_GEN", buttons: [{ text: "continuar al tema 2", next: "tema2_1" }] },
 
-            "tema2_1": { content: `<b>Tema 2: Lineamientos operativos</b>`, buttons: [{ text: "continuar", next: "tema2_bolsas" }] },
-            "tema2_bolsas": { isTest: true, content: `¿Qué bolsa en qué tacho?`, buttons: [{ text: "Marrón", isCorrect: true, feedback: "✅ Correcto.", next: "tema2_acopio" }] },
-            "tema2_acopio": { content: `Lleva las bolsas al acopio.`, image: "Imagen20.png", buttons: [{ text: "tema 3", next: "tema3_video" }] },
+            // TEMA 2
+            "tema2_1": { content: `<b>Tema 2: ¿Dónde lo separo?</b><br><br>🟤 Marrón: Orgánicos<br>🟢 Verde: Reciclaje<br>⚫ Negro: Basura`, buttons: [{ text: "continuar", next: "tema2_bolsas" }] },
+            "tema2_bolsas": { isTest: true, content: `Une cada color de bolsa con su tacho:`, buttons: [
+                { text: "tacho marrón", isCorrect: true, feedback: "🟤 Bolsa marrón: Gruesa para evitar derrames de orgánicos.", next: "tema2_bolsas_res" },
+                { text: "tacho verde", isCorrect: true, feedback: "🟢 Bolsa transparente: Para evidenciar el reciclaje.", next: "tema2_bolsas_res" },
+                { text: "tacho negro", isCorrect: true, feedback: "⚫ Bolsa negra: Lo que no podemos rescatar.", next: "tema2_bolsas_res" }
+            ]},
+            "tema2_bolsas_res": { content: `El uso de bolsas de colores evita confusiones al retirar los residuos al acopio.`, image: "Imagen19.png", buttons: [{ text: "¡entendido!", next: "tema2_acopio" }] },
+            "tema2_acopio": { content: `Al retirar las bolsas, llévalas al acopio. Aquí están listos para ser llevados al Nodo sinba.`, image: "Imagen20.png", buttons: [{ text: "continuar al tema 3", next: "tema3_video" }] },
 
-            "tema3_video": { content: `<b>Tema 3: Ciclo sinba</b>`, video: "https://www.youtube.com/embed/dQw4w9WgXcQ", buttons: [{ text: "continuar", next: "tema3_practica" }] },
-            "tema3_practica": { isTest: true, content: `Bolsa contaminada, ¿qué hacemos?`, buttons: [{ text: "Basura", isCorrect: true, feedback: "✅ Correcto.", next: "test_intro" }] },
+            // TEMA 3
+            "tema3_video": { content: `<b>Tema 3: ¿A dónde van mis residuos?</b><br><br>Mira qué pasa en nuestra Biofábrica y CIRC. 🌍✨`, video: "https://www.youtube.com/embed/VIDEO_CICLO", buttons: [{ text: "continuar", next: "tema3_practica" }] },
+            "tema3_practica": { isTest: true, content: `Situación: Una bolsa de orgánicos llega con guantes de látex y plásticos. ¿Qué hacemos?`, buttons: [
+                { text: "procesarlos igual", isCorrect: false, feedback: "❌ Incorrecto. No se pueden procesar orgánicos contaminados.", next: "tema3_fin" },
+                { text: "enviarlos a la basura", isCorrect: true, feedback: "✔️ Correcto. Se pierde la posibilidad de compost y deben ir al relleno.", next: "tema3_fin" }
+            ]},
+            "tema3_fin": { content: `¡Tú eres parte fundamental de nuestro ciclo de recuperación!<br><br>¿Listo para el test?`, buttons: [{ text: "empecemos con el test", next: "test_intro" }] },
 
-            "test_intro": { content: `📝 <b>¿Listo para el test?</b>`, buttons: [{ text: "comenzar", next: "q1" }] },
-            "q1": { isTest: true, content: `1️⃣ ¿Dónde va la bolsa de carne al vacío?`, buttons: [{ text: "Basura", isCorrect: true, feedback: "✔️ Correcto.", next: "q2" }, { text: "Orgánicos", isCorrect: false, feedback: "❌ No.", next: "q2" }] },
-            "q2": { isTest: true, content: `2️⃣ ¿Dónde van las cáscaras de plátano?`, buttons: [{ text: "Orgánicos", isCorrect: true, feedback: "✔️ Correcto.", next: "resultado" }] },
-            "resultado": { dynamicContent: () => `Acertaste ${state.score} de 2.`, dynamicButtons: () => [{ text: "Finalizar", action: downloadCert }] }
+            // TEST
+            "test_intro": { content: `📝 <b>¿Listo para poner a prueba lo que aprendiste?</b><br><br>Necesitas acertar al menos 3 de 5 preguntas.`, buttons: [{ text: "comencemos", next: "q1" }] },
+            "q1": { isTest: true, content: `1️⃣ ¿Dónde va una bolsa de carnes o embutidos al vacío? 🥩`, buttons: [
+                { text: "orgánicos", isCorrect: false, feedback: "❌ No es correcto. Tienen grasas que impiden su reciclaje. Van al tacho negro.", next: "q2" },
+                { text: "basura", isCorrect: true, feedback: "✔️ Correcto. Este empaque contaminado va al tacho negro.", next: "q2" }
+            ]},
+            "q2": { isTest: true, content: `2️⃣ ¿Dónde van restos vegetales como cáscaras de plátano? 🍌`, buttons: [
+                { text: "orgánicos", isCorrect: true, feedback: "✔️ ¡Excelente! Sirven para compostaje en el tacho marrón.", next: "q3" },
+                { text: "basura", isCorrect: false, feedback: "❌ No es correcto. ¡Tienen segunda vida!", next: "q3" }
+            ]},
+            "q3": { isTest: true, content: `3️⃣ ¿Dónde debe ir una bolsa de leche vacía?`, buttons: [
+                { text: "reciclaje", isCorrect: false, feedback: "❌ No es correcto. Tienen capas de materiales no reciclables. Van al tacho negro.", next: "q4" },
+                { text: "basura", isCorrect: true, feedback: "✔️ ¡Correcto! Van al tacho negro.", next: "q4" }
+            ]},
+            "q4": { isTest: true, content: `4️⃣ ¿Dónde van las envolturas de plástico de fideos?`, buttons: [
+                { text: "reciclaje", isCorrect: false, feedback: "❌ No es correcto. Este plástico no se puede reciclar. Al tacho negro.", next: "q5" },
+                { text: "basura", isCorrect: true, feedback: "✔️ ¡Correcto! Van al tacho negro.", next: "q5" }
+            ]},
+            "q5": { isTest: true, content: `5️⃣ ¿Dónde deben ir las latas de conserva limpias? 🥫`, buttons: [
+                { text: "reciclaje", isCorrect: true, feedback: "✔️ ¡Correcto! Son material reciclable. Van al tacho verde. ♻️", next: "resultado" },
+                { text: "basura", isCorrect: false, feedback: "❌ No es correcto. Si están limpias se reciclan.", next: "resultado" }
+            ]},
+            "resultado": {
+                dynamicContent: () => state.score >= 3 ? 
+                    `🎉 ¡Felicitaciones!<br>Acertaste ${state.score} de 5.<br>Gracias por ser parte del cambio. 💜` :
+                    `Acertaste ${state.score} de 5.<br>Ánimo, no alcanzaste el mínimo.`,
+                dynamicButtons: () => {
+                    if(state.score >= 3) return [{ text: "descargar mi constancia", action: downloadCert }, { text: "volver al inicio", next: "intro" }];
+                    if(state.testAttempts < 1) return [{ text: "probar una vez más", action: retryTest }];
+                    return [{ text: "reiniciar curso", action: restartCourse }];
+                }
+            }
         };
 
         function renderTimeline() {
@@ -142,16 +166,13 @@
             else if (phases.tema3.includes(state.step)) phaseIdx = 4;
             else if (phases.test.includes(state.step)) phaseIdx = 5;
 
-            // Actualizar visual de la línea
             document.getElementById("timeline-progress").style.width = ((phaseIdx - 1) / 4 * 100) + "%";
-
             for (let i = 1; i <= 5; i++) {
                 const item = document.getElementById(`step-${i}`);
                 item.classList.remove("active", "completed");
                 if (i < phaseIdx) item.classList.add("completed");
                 if (i === phaseIdx) item.classList.add("active");
                 
-                // Bloquear clics si estamos en la fase del test (5)
                 if (phaseIdx === 5) {
                     item.onclick = null;
                     item.classList.add("disabled");
@@ -165,12 +186,7 @@
             }
         }
 
-        function jumpTo(targetStep) {
-            if (phases.test.includes(state.step)) return; // No saltar si estamos en el test
-            state.history.push(state.step);
-            state.step = targetStep;
-            render();
-        }
+        function jumpTo(t) { if (phases.test.includes(state.step)) return; state.history.push(state.step); state.step = t; render(); }
 
         function render() {
             renderTimeline();
@@ -182,10 +198,10 @@
             nav.style.display = (state.step === "intro" || state.step === "registro") ? "none" : "flex";
 
             if (stepData.logo) container.innerHTML += `<img src="logo.png" class="logo">`;
-            container.innerHTML += `<p class="text-lg leading-relaxed mb-4">${stepData.dynamicContent ? stepData.dynamicContent() : stepData.content}</p>`;
+            container.innerHTML += `<p class="text-sm md:text-base leading-relaxed mb-4">${stepData.dynamicContent ? stepData.dynamicContent() : stepData.content}</p>`;
             if (stepData.image) container.innerHTML += `<img src="${stepData.image}" class="img-content">`;
             if (stepData.video) container.innerHTML += `<div class="video-container"><iframe src="${stepData.video}" frameborder="0" allowfullscreen></iframe></div>`;
-            if (stepData.inputs) stepData.inputs.forEach(i => container.innerHTML += `<input type="text" id="${i.id}" placeholder="${i.placeholder}">`);
+            if (stepData.inputs) stepData.inputs.forEach(i => container.innerHTML += `<input type="text" id="${i.id}" placeholder="${i.placeholder}" value="${state[i.key] || ''}">`);
 
             const buttonArea = document.createElement("div");
             const nextBtn = document.createElement("button");
@@ -214,6 +230,7 @@
                     b.onclick = () => {
                         if (stepData.inputs) {
                             stepData.inputs.forEach(inp => state[stepData.inputs.find(x => x.id === inp.id).key] = document.getElementById(inp.id).value);
+                            if(!state.userName || !state.userDni) return alert("Completa tus datos");
                         }
                         if (btn.action) btn.action();
                         else { state.history.push(state.step); state.step = btn.next; render(); }
@@ -226,8 +243,23 @@
         }
 
         function goBack() { if (state.history.length > 0) { state.step = state.history.pop(); if (state.step === 'test_intro') state.score = 0; render(); } }
-        function goHome() { if (confirm("¿Reiniciar?")) location.reload(); }
-        function downloadCert() { alert("Generando Certificado para " + state.userName); }
+        function goHome() { if (confirm("¿Volver al inicio?")) restartCourse(); }
+        function retryTest() { state.testAttempts++; state.score = 0; state.step = "q1"; render(); }
+        function restartCourse() { state = { step: "intro", history: [], userName: "", userDni: "", score: 0, testAttempts: 0 }; render(); }
+
+        function downloadCert() {
+            const canvas = document.createElement("canvas"); canvas.width = 800; canvas.height = 600;
+            const ctx = canvas.getContext("2d");
+            ctx.fillStyle = "white"; ctx.fillRect(0,0,800,600);
+            ctx.strokeStyle = "#511191"; ctx.lineWidth = 20; ctx.strokeRect(0,0,800,600);
+            ctx.fillStyle = "#511191"; ctx.font = "bold 40px Montserrat"; ctx.textAlign = "center";
+            ctx.fillText("CONSTANCIA DE PARTICIPACIÓN", 400, 150);
+            ctx.fillStyle = "#333"; ctx.font = "30px Montserrat"; ctx.fillText(state.userName.toUpperCase(), 400, 300);
+            ctx.fillText("DNI: " + state.userDni, 400, 360);
+            ctx.font = "18px Montserrat"; ctx.fillText("completó con éxito el curso de sinba.", 400, 450);
+            const link = document.createElement('a'); link.download = 'Constancia_sinba.png';
+            link.href = canvas.toDataURL(); link.click();
+        }
 
         window.onload = render;
     </script>
