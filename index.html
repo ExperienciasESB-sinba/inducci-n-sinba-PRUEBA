@@ -90,7 +90,7 @@
             "intro": { logo: true, content: `¡Hola!👋 ¿Te imaginas un mundo sin basura, donde todos los materiales se reutilizan?<br><br>En este micro curso aprenderás cómo segregar correctamente en tu empresa. Al finalizar, recibirás un certificado.`, buttons: [{ text: "registrarme", next: "registro" }] },
             "registro": { logo: true, content: `🟩⬜⬜⬜⬜⬜<br><br>¡Muy bien! Por favor, escribe tu nombre y apellido completo y tu DNI para tu certificado.`, inputs: [{ id: "n", placeholder: "Nombre y Apellido", key: "userName" }, { id: "d", placeholder: "DNI", key: "userDni" }], buttons: [{ text: "continuar", next: "confirmacion" }] },
             "confirmacion": { logo: true, dynamicContent: () => `🟩🟩⬜⬜⬜<br><br>¿Te parece bien que usemos estos datos?<br><b>${state.userName}</b><br>DNI: ${state.userDni}`, buttons: [{ text: "sí, está bien", next: "politica" }, { text: "no, corregir", next: "registro" }] },
-            "politica": { content: `Antes de empezar, ¿aceptas nuestra política de confidencialidad?<br><br>musa.la/politica-de-privacidad/`, buttons: [{ text: "acepto", next: "ruta" }, { text: "no acepto", feedback: "Es necesario aceptar para continuar.", next: "politica" }] },
+            "politica": { content: `Antes de empezar, ¿aceptas nuestra política de confidencialidad?<br><br>https://sinba.pe/politica-de-privacidad-de-datos/`, buttons: [{ text: "acepto", next: "ruta" }, { text: "no acepto", feedback: "Es necesario aceptar para continuar.", next: "politica" }] },
             "ruta": { content: `<b>Ruta de aprendizaje</b>`, image: "Imagen1.png", buttons: [{ text: "¡empecemos!", next: "tema1_1" }] },
             
             // TEMA 1
