@@ -223,6 +223,118 @@
             }
         };
 
+        function render() {
+    renderTimeline(); // Actualiza la línea de tiempo superior
+    const stepData = steps[state.step];
+    const container = document.getElementById("app-content");
+    const nav = document.getElementById("main-nav");
+
+    // 1. Limpiar contenedor y aplicar efecto de entrada
+    container.innerHTML = "";
+    container.className = "content-body fade";
+
+    // 2. Controlar visibilidad de navegación inferior
+    const isStart = ["intro", "registro", "confirmacion", "politica"].includes(state.step);
+    nav.style.display = isStart ? "none" : "flex";
+
+    // 3. Mostrar Logo si el paso lo requiere
+    if (stepData.logo) {
+        container.innerHTML += `<img src="logo.png" class="logo" alt="sinba">`;
+    }
+
+    // 4. Mostrar Texto (Normal o Dinámico)
+    const mainText = stepData.dynamicContent ? stepData.dynamicContent() : stepData.content;
+    container.innerHTML += `<p class="text-lg leading-relaxed mb-4">${mainText}</p>`;
+
+    // 5. Mostrar Imagen o Video si existen
+    if (stepData.image) container.innerHTML += `<img src="${stepData.image}" class="img-content">`;
+    if (stepData.video) container.innerHTML += `<div class="video-container"><iframe src="${stepData.video}" frameborder="0" allowfullscreen></iframe></div>`;
+
+    // 6. Mostrar Inputs (para registro)
+    if (stepData.inputs) {
+        stepData.inputs.forEach(inp => {
+            container.innerHTML += `<input type="text" id="${inp.id}" placeholder="${inp.placeholder}" value="${state[inp.key] || ''}">`;
+        });
+    }
+
+    // 7. GENERAR BOTONES / TARJETAS
+    const buttonArea = document.createElement("div");
+    
+    // Si es el test de rejilla 2x2 usamos la clase grid-container, sino flex normal
+    if (stepData.isGridTest) {
+        buttonArea.className = "grid-container";
+    } else {
+        buttonArea.className = "flex flex-col w-full";
+    }
+
+    const nextBtn = document.createElement("button");
+    nextBtn.className = "btn-sinba btn-next-step col-span-2";
+    nextBtn.innerText = "siguiente";
+
+    const btns = stepData.dynamicButtons ? stepData.dynamicButtons() : stepData.buttons;
+    
+    btns?.forEach(btn => {
+        // CASO A: Es un Test o Práctica (Usa Flip Cards)
+        if (stepData.isTest || stepData.isGridTest) {
+            const card = document.createElement("div");
+            card.className = stepData.isGridTest ? "flip-card flip-card-grid" : "flip-card";
+            
+            // Si es rejilla, ponemos imagen blanca. Si es test normal, botón morado.
+            const frontClass = stepData.isGridTest ? "flip-card-front flip-card-front-white" : "flip-card-front";
+            const frontHTML = stepData.isGridTest 
+                ? `<img src="${btn.img}"><span>${btn.text}</span>` 
+                : btn.text;
+
+            card.innerHTML = `
+                <div class="flip-card-inner">
+                    <div class="${frontClass}">${frontHTML}</div>
+                    <div class="flip-card-back ${btn.isCorrect ? 'bg-correct' : 'bg-incorrect'}">
+                        ${btn.feedback}
+                    </div>
+                </div>`;
+
+            card.onclick = () => {
+                if (card.classList.contains("is-flipped")) return;
+                card.classList.add("is-flipped");
+                
+                // Si es el test final, sumar puntos
+                if (btn.isCorrect && state.step.startsWith('q')) state.score++;
+                
+                // Mostrar botón "siguiente"
+                nextBtn.style.display = "block";
+                nextBtn.onclick = () => { 
+                    state.history.push(state.step); 
+                    state.step = btn.next; 
+                    render(); 
+                };
+            };
+            buttonArea.appendChild(card);
+
+        } else {
+            // CASO B: Botón normal (Navegación)
+            const b = document.createElement("button");
+            b.className = "btn-sinba";
+            b.innerText = btn.text;
+            b.onclick = () => {
+                if (stepData.inputs) {
+                    stepData.inputs.forEach(i => state[stepData.inputs.find(x => x.id === i.id).key] = document.getElementById(i.id).value);
+                    if (!state.userName || !state.userDni) return alert("Por favor completa tus datos");
+                }
+                if (btn.action) {
+                    btn.action();
+                } else {
+                    state.history.push(state.step);
+                    state.step = btn.next;
+                    render();
+                }
+            };
+            buttonArea.appendChild(b);
+        }
+    });
+
+    buttonArea.appendChild(nextBtn);
+    container.appendChild(buttonArea);
+}
         function renderTimeline() {
             let phaseIdx = 0;
             if (phases.datos.includes(state.step)) phaseIdx = 1;
