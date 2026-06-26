@@ -97,12 +97,40 @@
             "tema1_1": { content: `<b>Tema 1: ¿Cómo debo segregar?</b><br><br>Clasificar correctamente tus residuos permite que puedan ser reciclados, reutilizados o compostados.🌿♻️<br><br>En adelante tus residuos se clasificarán en 3 categorías: orgánicos, reciclables y generales.`, image: "Imagen2.png", buttons: [{ text: "revisemos cada categoría", next: "tema1_org" }] },
             "tema1_org": { content: `🌱 <b>Residuos orgánicos (tacho marrón)</b><br><br>Residuos que pueden descomponerse rápidamente ya que derivan de insumos animales o vegetales.`, video: "https://www.youtube.com/embed/VIDEO_ORG", buttons: [{ text: "continuar", next: "tema1_rec" }] },
             "tema1_rec": { content: `♻️ <b>Reciclaje (tacho verde)</b><br><br>Materiales que pueden ser tratados para convertirse en nuevos productos: plástico, papel, cartón, metales y vidrios.`, video: "https://www.youtube.com/embed/VIDEO_REC", buttons: [{ text: "continuar", next: "practica1" }] },
-            "practica1": { isTest: true, content: `¿Cuáles de estos residuos pueden ser reciclados? Dale click a las opciones del tacho verde.`, buttons: [
-                { text: "lata con restos de atún", isCorrect: false, feedback: "⚠️ Si tiene muchos restos de comida, debe ir a la basura. Si quitamos el contenido, puede ir a reciclaje.", next: "tema1_tips" },
-                { text: "un tetrapack", isCorrect: true, feedback: "✅ Es reciclable.", next: "tema1_tips" },
-                { text: "una botella de vidrio", isCorrect: true, feedback: "✅ Es reciclable.", next: "tema1_tips" },
-                { text: "una taza", isCorrect: false, feedback: "❌ No es reciclable. Su densidad es mayor. Va a la basura.", next: "tema1_tips" }
-            ]},
+            "practica1": {
+    isGridTest: true, // Nueva propiedad para identificar este formato
+    content: `¿Cuáles de estos residuos pueden ser reciclados? Dale click a las imágenes que irían al tacho verde.`,
+    buttons: [
+        { 
+            text: "Lata con restos de atún", 
+            img: "ejemplo1.png", 
+            isCorrect: false, 
+            feedback: "⚠️ Si tiene muchos restos de comida, debe ir a la basura. Si quitamos todo el contenido, puede ir a reciclaje.", 
+            next: "tema1_gen" 
+        },
+        { 
+            text: "Tetrapack (caja de leche)", 
+            img: "ejemplo2.png", 
+            isCorrect: true, 
+            feedback: "✅ Es reciclable.", 
+            next: "tema1_gen" 
+        },
+        { 
+            text: "Botella de vidrio", 
+            img: "ejemplo3.png", 
+            isCorrect: true, 
+            feedback: "✅ Es reciclable.", 
+            next: "tema1_gen" 
+        },
+        { 
+            text: "Taza", 
+            img: "ejemplo4.png", 
+            isCorrect: false, 
+            feedback: "❌ No es reciclable, su densidad es mayor y soporta el calor más que el vidrio. Va a la basura", 
+            next: "tema1_gen" 
+        }
+    ]
+},
             "tema1_tips": { content: `Tips para identificar reciclables:`, image: "Imagen9.png", buttons: [{ text: "continuar", next: "tema1_gen" }] },
             "tema1_gen": { content: `🚮 <b>Residuos generales o basura (tacho negro)</b><br><br>Envases sucios, contaminados o degradados que no podemos reaprovechar.`, video: "https://www.youtube.com/embed/VIDEO_GEN", buttons: [{ text: "continuar al tema 2", next: "tema2_1" }] },
 
