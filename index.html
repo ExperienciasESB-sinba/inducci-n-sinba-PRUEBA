@@ -52,6 +52,43 @@
         input { width: 100%; padding: 14px; border: 2px solid #eee; border-radius: 12px; margin-bottom: 10px; text-align: center; font-size: 16px; outline: none; box-sizing: border-box; }
         .fade { animation: fadeIn 0.4s ease-out; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        /* --- ESTILOS PARA LA REJILLA 2X2 DE IMÁGENES --- */
+        .grid-container { 
+            display: grid; 
+            grid-template-columns: repeat(2, 1fr); 
+            gap: 12px; 
+            margin-top: 15px; 
+        }
+
+        .flip-card-grid { 
+            height: 180px !important; 
+        }
+
+        .flip-card-front-white { 
+            background-color: white !important; 
+            color: #444 !important; 
+            border: 1px solid #eee; 
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08); 
+            flex-direction: column; 
+            padding: 10px !important; 
+        }
+
+        .flip-card-front-white img { 
+            width: 85%; 
+            height: 100px; 
+            object-fit: contain; 
+            margin-bottom: 8px; 
+        }
+
+        .flip-card-front-white span { 
+            font-size: 11px; 
+            line-height: 1.2; 
+            font-weight: 600;
+        }
+
+        .col-span-2 {
+            grid-column: span 2 / span 2;
+        }
     </style>
 </head>
 <body class="min-h-screen flex flex-col items-center justify-start p-4">
