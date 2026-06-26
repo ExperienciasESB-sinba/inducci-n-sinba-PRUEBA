@@ -7,7 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
     <style>
-        :root { --purple: #511191; --light: #F9FAFB; --correct: #27ae60; --incorrect: #e74c3c; --gray: #d1d5db; }
+        :root { --purple: #511191; --lila: #E9D5FF; --light: #F9FAFB; --correct: #27ae60; --incorrect: #e74c3c; --gray: #d1d5db; }
         body { font-family: 'Montserrat', sans-serif; background-color: var(--light); color: #333; margin: 0; padding: 0; }
         
         /* Línea de Tiempo Superior */
@@ -15,20 +15,17 @@
         .timeline-line { position: absolute; top: 15px; left: 40px; right: 40px; height: 2px; background: var(--gray); z-index: 1; }
         .timeline-progress { position: absolute; top: 15px; left: 40px; height: 2px; background: var(--purple); z-index: 2; transition: width 0.4s ease; width: 0%; }
         .step-item { position: relative; z-index: 3; display: flex; flex-direction: column; align-items: center; width: 60px; cursor: pointer; transition: 0.3s; }
-        .step-item.disabled { cursor: not-allowed; opacity: 0.5; }
-        .step-circle { width: 30px; height: 30px; border-radius: 50%; background: white; border: 2px solid var(--gray); display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 12px; margin-bottom: 5px; transition: 0.3s; }
+        .step-circle { width: 30px; height: 30px; border-radius: 50%; background: white; border: 2px solid var(--gray); display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 12px; margin-bottom: 5px; }
         .step-label { font-size: 9px; text-align: center; font-weight: 600; text-transform: uppercase; color: var(--gray); }
         .step-item.active .step-circle { border-color: var(--purple); background: var(--purple); color: white; }
         .step-item.active .step-label { color: var(--purple); }
         .step-item.completed .step-circle { background: var(--purple); border-color: var(--purple); color: white; }
+        .disabled { cursor: not-allowed; opacity: 0.5; pointer-events: none; }
 
         /* Card Principal */
         .app-card { background: white; border-radius: 24px; box-shadow: 0 10px 40px rgba(0,0,0,0.06); width: 100%; max-width: 500px; min-height: 580px; display: flex; flex-direction: column; position: relative; margin: 0 auto 40px auto; }
-        
-        /* Logo Fijo */
         .fixed-logo-container { padding: 25px 0 0 0; width: 100%; display: flex; justify-content: center; }
         .logo { max-height: 50px; display: block; object-fit: contain; }
-
         .content-body { padding: 20px 25px 100px 25px; flex-grow: 1; text-align: center; }
         
         /* Botones e Inputs */
@@ -37,30 +34,40 @@
         .btn-next-step { background: #333; margin-top: 25px; display: none; animation: fadeIn 0.5s; }
         input { width: 100%; padding: 14px; border: 2px solid #eee; border-radius: 12px; margin-bottom: 10px; text-align: center; font-size: 16px; outline: none; box-sizing: border-box; }
 
-        /* Flip Cards y Rejilla */
+        /* JUEGO DE EMPAREJAR (MATCHING GAME) */
+        .matching-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px; }
+        .match-card { perspective: 1000px; height: 160px; cursor: pointer; position: relative; }
+        .match-card-inner { position: relative; width: 100%; height: 100%; transition: transform 0.6s; transform-style: preserve-3d; }
+        .match-card.is-flipped .match-card-inner { transform: rotateY(180deg); }
+        .match-front, .match-back { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; border-radius: 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 10px; border: 1px solid #eee; box-shadow: 0 4px 10px rgba(0,0,0,0.05); background: white; }
+        .match-front img { height: 70px; object-fit: contain; margin-bottom: 10px; pointer-events: none; }
+        .match-front span { font-size: 11px; font-weight: 600; color: #444; pointer-events: none; }
+        .match-back { transform: rotateY(180deg); color: white; text-align: center; font-size: 11px; padding: 15px; }
+        
+        /* Estados del Juego */
+        .selected-lila .match-front { background-color: var(--lila) !important; border-color: var(--purple); }
+        .bg-correct { background-color: var(--correct) !important; border: none; }
+        .bg-incorrect { background-color: var(--incorrect) !important; border: none; }
+
+        /* FLIP CARDS Y REJILLA (TEMA 1) */
         .grid-container { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-top: 15px; }
-        .flip-card { perspective: 1000px; width: 100%; height: 110px; margin-bottom: 12px; cursor: pointer; border: none; background: none; padding: 0; }
+        .flip-card { perspective: 1000px; width: 100%; height: 110px; cursor: pointer; position: relative; }
         .flip-card-grid { height: 180px !important; }
         .flip-card-inner { position: relative; width: 100%; height: 100%; transition: transform 0.6s; transform-style: preserve-3d; }
         .flip-card.is-flipped .flip-card-inner { transform: rotateY(180deg); }
-        .flip-card-front, .flip-card-back { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; border-radius: 14px; display: flex; align-items: center; justify-content: center; padding: 15px; font-weight: 600; font-size: 13px; color: white; }
+        .flip-card-front, .flip-card-back { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; border-radius: 16px; display: flex; align-items: center; justify-content: center; padding: 15px; font-weight: 600; font-size: 13px; color: white; }
         .flip-card-front { background-color: var(--purple); text-transform: lowercase; }
-        .flip-card-back { transform: rotateY(180deg); font-size: 12px; font-weight: 400; text-align: left; flex-direction: column; align-items: flex-start; }
-        .bg-correct { background-color: var(--correct); }
-        .bg-incorrect { background-color: var(--incorrect); }
-
-        /* Estilo Blanco para Rejilla */
         .flip-card-front-white { background-color: white !important; color: #444 !important; border: 1px solid #eee; box-shadow: 0 4px 12px rgba(0,0,0,0.08); flex-direction: column; padding: 10px !important; }
         .flip-card-front-white img { width: 85%; height: 100px; object-fit: contain; margin-bottom: 8px; }
         .flip-card-front-white span { font-size: 11px; line-height: 1.2; font-weight: 600; text-transform: none; }
+        .flip-card-back { transform: rotateY(180deg); font-size: 12px; font-weight: 400; text-align: left; flex-direction: column; align-items: flex-start; }
 
+        /* Otros */
         .nav-footer { position: absolute; bottom: 0; left: 0; width: 100%; height: 70px; border-top: 1px solid #f0f0f0; display: flex; justify-content: space-between; align-items: center; padding: 0 20px; background: white; border-radius: 0 0 24px 24px; }
         .nav-btn { color: var(--purple); font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 5px; font-size: 13px; padding: 8px; border-radius: 8px; }
-
         .img-content { width: 100%; border-radius: 15px; margin: 15px 0; max-height: 250px; object-fit: contain; background: #f9f9f9; }
         .video-container { position: relative; padding-bottom: 56.25%; height: 0; margin: 15px 0; border-radius: 15px; overflow: hidden; background: #000; }
         .video-container iframe { position: absolute; top:0; left: 0; width: 100%; height: 100%; }
-        
         .fade { animation: fadeIn 0.4s ease-out; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         .col-span-2 { grid-column: span 2 / span 2; }
@@ -72,21 +79,16 @@
     <div class="timeline-container" id="timeline">
         <div class="timeline-line"></div>
         <div class="timeline-progress" id="timeline-progress"></div>
-        <div class="step-item" id="step-1"><div class="step-circle">1</div><div class="step-label">Datos</div></div>
-        <div class="step-item" id="step-2"><div class="step-circle">2</div><div class="step-label">Tema 1</div></div>
-        <div class="step-item" id="step-3"><div class="step-circle">3</div><div class="step-label">Tema 2</div></div>
-        <div class="step-item" id="step-4"><div class="step-circle">4</div><div class="step-label">Tema 3</div></div>
+        <div class="step-item" id="step-1" onclick="jumpTo('intro')"><div class="step-circle">1</div><div class="step-label">Datos</div></div>
+        <div class="step-item" id="step-2" onclick="jumpTo('tema1_1')"><div class="step-circle">2</div><div class="step-label">Tema 1</div></div>
+        <div class="step-item" id="step-3" onclick="jumpTo('tema2_1')"><div class="step-circle">3</div><div class="step-label">Tema 2</div></div>
+        <div class="step-item" id="step-4" onclick="jumpTo('tema3_video')"><div class="step-circle">4</div><div class="step-label">Tema 3</div></div>
         <div class="step-item disabled" id="step-5"><div class="step-circle">5</div><div class="step-label">Test</div></div>
     </div>
 
     <div class="app-card">
-        <!-- LOGO PERMANENTE -->
-        <div class="fixed-logo-container">
-            <img src="logo.png" class="logo" alt="sinba">
-        </div>
-
+        <div class="fixed-logo-container"><img src="logo.png" class="logo" alt="sinba"></div>
         <div class="content-body fade" id="app-content"></div>
-
         <div class="nav-footer" id="main-nav" style="display: none;">
             <div class="nav-btn" onclick="goBack()"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M15 19l-7-7 7-7"></path></svg> anterior</div>
             <div class="nav-btn" onclick="goHome()"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg></div>
@@ -94,7 +96,16 @@
     </div>
 
     <script>
-        let state = { step: "intro", history: [], userName: "", userDni: "", score: 0, testAttempts: 0 };
+        let state = { 
+            step: "intro", 
+            history: [], 
+            userName: "", 
+            userDni: "", 
+            score: 0, 
+            testAttempts: 0,
+            matchingSelections: { left: null, right: null },
+            matchesFound: 0
+        };
 
         const phases = {
             "datos": ["intro", "registro", "confirmacion", "politica", "ruta"],
@@ -115,27 +126,35 @@
             "tema1_1": { content: `<b>Tema 1: ¿Cómo debo segregar?</b><br><br>Clasificar correctamente tus residuos permite que puedan ser reciclados, reutilizados o compostados.🌿♻️<br><br>En adelante tus residuos se clasificarán en 3 categorías: orgánicos, reciclables y generales.`, image: "Imagen2.png", buttons: [{ text: "revisemos cada categoría", next: "tema1_org" }] },
             "tema1_org": { content: `🌱 <b>Residuos orgánicos (tacho marrón)</b><br><br>Residuos que pueden descomponerse rápidamente ya que derivan de insumos animales o vegetales.`, video: "https://www.youtube.com/embed/dQw4w9WgXcQ", buttons: [{ text: "continuar", next: "tema1_rec" }] },
             "tema1_rec": { content: `♻️ <b>Reciclaje (tacho verde)</b><br><br>Materiales que pueden ser tratados para convertirse en nuevos productos: plástico, papel, cartón, metales y vidrios.`, video: "https://www.youtube.com/embed/dQw4w9WgXcQ", buttons: [{ text: "continuar", next: "practica1" }] },
-            
-            "practica1": { 
-                isGridTest: true,
-                content: `¿Cuáles de estos residuos pueden ser reciclados? Dale click a las imágenes que irían al tacho verde.`, 
-                buttons: [
+            "practica1": { isGridTest: true, content: `¿Cuáles de estos residuos pueden ser reciclados? Dale click a las imágenes que irían al tacho verde.`, buttons: [
                 { text: "lata con restos de atún", img: "ejemplo1.png", isCorrect: false, feedback: "⚠️ Si tiene muchos restos de comida, debe ir a la basura. Si quitamos el contenido, puede ir a reciclaje.", next: "tema1_tips" },
                 { text: "un tetrapack (caja de leche)", img: "ejemplo2.png", isCorrect: true, feedback: "✅ Es reciclable.", next: "tema1_tips" },
                 { text: "una botella de vidrio", img: "ejemplo3.png", isCorrect: true, feedback: "✅ Es reciclable.", next: "tema1_tips" },
                 { text: "una taza", img: "ejemplo4.png", isCorrect: false, feedback: "❌ No es reciclable, su densidad es mayor y soporta el calor más que el vidrio. Va a la basura", next: "tema1_tips" }
             ]},
-
             "tema1_tips": { content: `Tips para identificar reciclables:`, image: "Imagen9.png", buttons: [{ text: "continuar", next: "tema1_gen" }] },
             "tema1_gen": { content: `🚮 <b>Residuos generales o basura (tacho negro)</b><br><br>Envases sucios, contaminados o degradados que no podemos reaprovechar.`, video: "https://www.youtube.com/embed/dQw4w9WgXcQ", buttons: [{ text: "continuar al tema 2", next: "tema2_1" }] },
 
             // TEMA 2
             "tema2_1": { content: `<b>Tema 2: ¿Dónde lo separo?</b><br><br>🟤 Marrón: Orgánicos<br>🟢 Verde: Reciclaje<br>⚫ Negro: Basura`, buttons: [{ text: "continuar", next: "tema2_bolsas" }] },
-            "tema2_bolsas": { isTest: true, content: `Une cada color de bolsa con su tacho:`, buttons: [
-                { text: "tacho marrón", isCorrect: true, feedback: "🟤 Bolsa marrón: Gruesa para evitar derrames de orgánicos.", next: "tema2_bolsas_res" },
-                { text: "tacho verde", isCorrect: true, feedback: "🟢 Bolsa transparente: Para evidenciar el reciclaje.", next: "tema2_bolsas_res" },
-                { text: "tacho negro", isCorrect: true, feedback: "⚫ Bolsa negra: Lo que no podemos rescatar.", next: "tema2_bolsas_res" }
-            ]},
+            
+            // --- JUEGO DE EMPAREJAR TEMA 2 ---
+            "tema2_bolsas": { 
+                isMatching: true, 
+                content: `Une cada color de bolsa con su tacho:`, 
+                next: "tema2_bolsas_res",
+                leftItems: [
+                    { id: 'L0', text: 'Bolsa Marrón', img: 'bolsa_marron.png', matchId: 'R1', feedback: '✅ ¡Correcto! Va al tacho marrón.' },
+                    { id: 'L1', text: 'Bolsa Transparente', img: 'bolsa_transparente.png', matchId: 'R2', feedback: '✅ ¡Correcto! Va al tacho verde.' },
+                    { id: 'L2', text: 'Bolsa Negra', img: 'bolsa_negra.png', matchId: 'R0', feedback: '✅ ¡Correcto! Va al tacho negro.' }
+                ],
+                rightItems: [
+                    { id: 'R0', text: 'Tacho Basura', img: 'tacho_negro.png' },
+                    { id: 'R1', text: 'Tacho Orgánicos', img: 'tacho_marron.png' },
+                    { id: 'R2', text: 'Tacho Reciclaje', img: 'tacho_verde.png' }
+                ]
+            },
+
             "tema2_bolsas_res": { content: `El uso de bolsas de colores evita confusiones al retirar los residuos al acopio.`, image: "Imagen19.png", buttons: [{ text: "¡entendido!", next: "tema2_acopio" }] },
             "tema2_acopio": { content: `Al retirar las bolsas, llévalas al acopio. Aquí están listos para ser llevados al Nodo sinba.`, image: "Imagen20.png", buttons: [{ text: "continuar al tema 3", next: "tema3_video" }] },
 
@@ -192,24 +211,13 @@
             document.getElementById("timeline-progress").style.width = ((phaseIdx - 1) / 4 * 100) + "%";
             for (let i = 1; i <= 5; i++) {
                 const item = document.getElementById(`step-${i}`);
+                if(!item) continue;
                 item.classList.remove("active", "completed");
                 if (i < phaseIdx) item.classList.add("completed");
                 if (i === phaseIdx) item.classList.add("active");
-                
-                if (phaseIdx === 5) {
-                    item.onclick = null;
-                    item.classList.add("disabled");
-                } else {
-                    item.classList.remove("disabled");
-                    if (i === 1) item.onclick = () => jumpTo('intro');
-                    if (i === 2) item.onclick = () => jumpTo('tema1_1');
-                    if (i === 3) item.onclick = () => jumpTo('tema2_1');
-                    if (i === 4) item.onclick = () => jumpTo('tema3_video');
-                }
+                if (phaseIdx === 5) item.classList.add("disabled");
             }
         }
-
-        function jumpTo(t) { if (phases.test.includes(state.step)) return; state.history.push(state.step); state.step = t; render(); }
 
         function render() {
             renderTimeline();
@@ -224,17 +232,44 @@
             const mainText = stepData.dynamicContent ? stepData.dynamicContent() : stepData.content;
             container.innerHTML += `<p class="text-sm md:text-base leading-relaxed mb-4">${mainText}</p>`;
 
+            // --- LÓGICA ESPECIAL JUEGO DE EMPAREJAR ---
+            if (stepData.isMatching) {
+                const grid = document.createElement("div");
+                grid.className = "matching-grid";
+                
+                // Mezclar un poco el orden de la derecha para el juego
+                const leftContainer = document.createElement("div");
+                const rightContainer = document.createElement("div");
+                leftContainer.className = "flex flex-col gap-3";
+                rightContainer.className = "flex flex-col gap-3";
+
+                stepData.leftItems.forEach(item => {
+                    leftContainer.appendChild(createMatchCard(item, 'left'));
+                });
+                stepData.rightItems.forEach(item => {
+                    rightContainer.appendChild(createMatchCard(item, 'right'));
+                });
+
+                grid.appendChild(leftContainer);
+                grid.appendChild(rightContainer);
+                container.appendChild(grid);
+
+                const nextBtn = document.createElement("button");
+                nextBtn.className = "btn-sinba btn-next-step col-span-2";
+                nextBtn.id = "btn-match-next";
+                nextBtn.innerText = "siguiente";
+                nextBtn.onclick = () => { state.step = stepData.next; state.matchesFound = 0; render(); };
+                container.appendChild(nextBtn);
+                return;
+            }
+
             if (stepData.image) container.innerHTML += `<img src="${stepData.image}" class="img-content">`;
             if (stepData.video) container.innerHTML += `<div class="video-container"><iframe src="${stepData.video}" frameborder="0" allowfullscreen></iframe></div>`;
             if (stepData.inputs) stepData.inputs.forEach(i => container.innerHTML += `<input type="text" id="${i.id}" placeholder="${i.placeholder}" value="${state[i.key] || ''}">`);
 
             const buttonArea = document.createElement("div");
-            if (stepData.isGridTest) {
-                buttonArea.className = "grid-container";
-            } else {
-                buttonArea.className = "flex flex-col w-full";
-            }
-
+            buttonArea.className = stepData.isGridTest ? "grid-container" : "flex flex-col w-full";
+            
             const nextBtn = document.createElement("button");
             nextBtn.className = "btn-sinba btn-next-step col-span-2";
             nextBtn.innerText = "siguiente";
@@ -244,11 +279,8 @@
                 if (stepData.isTest || stepData.isGridTest) {
                     const card = document.createElement("div");
                     card.className = stepData.isGridTest ? "flip-card flip-card-grid" : "flip-card";
-                    
                     const frontClass = stepData.isGridTest ? "flip-card-front flip-card-front-white" : "flip-card-front";
-                    const frontHTML = stepData.isGridTest 
-                        ? `<img src="${btn.img}"><span>${btn.text}</span>` 
-                        : btn.text;
+                    const frontHTML = stepData.isGridTest ? `<img src="${btn.img}"><span>${btn.text}</span>` : btn.text;
 
                     card.innerHTML = `<div class="flip-card-inner"><div class="${frontClass}">${frontHTML}</div><div class="flip-card-back ${btn.isCorrect ? 'bg-correct' : 'bg-incorrect'}">${btn.feedback}</div></div>`;
                     card.onclick = () => {
@@ -278,8 +310,99 @@
             container.appendChild(buttonArea);
         }
 
+        // --- FUNCIONES PARA EL JUEGO DE EMPAREJAR ---
+
+        function createMatchCard(item, side) {
+            const card = document.createElement("div");
+            card.className = "match-card";
+            card.id = `card-${item.id}`;
+            card.innerHTML = `
+                <div class="match-card-inner">
+                    <div class="match-front">
+                        <img src="${item.img}">
+                        <span>${item.text}</span>
+                    </div>
+                    <div class="match-back" id="back-${item.id}">
+                        <!-- Mensaje de feedback se inyecta aquí -->
+                    </div>
+                </div>
+            `;
+            card.onclick = () => handleMatchClick(item, side);
+            return card;
+        }
+
+        function handleMatchClick(item, side) {
+            const card = document.getElementById(`card-${item.id}`);
+            if (card.classList.contains('is-flipped') || card.classList.contains('matched')) return;
+
+            // Limpiar selección previa del mismo lado
+            document.querySelectorAll(`.match-card`).forEach(c => {
+                if (c.id.includes(side === 'left' ? 'L' : 'R')) c.classList.remove('selected-lila');
+            });
+
+            // Seleccionar actual
+            card.classList.add('selected-lila');
+            state.matchingSelections[side] = item;
+
+            // Verificar si hay pareja
+            if (state.matchingSelections.left && state.matchingSelections.right) {
+                checkMatch();
+            }
+        }
+
+        function checkMatch() {
+            const leftItem = state.matchingSelections.left;
+            const rightItem = state.matchingSelections.right;
+            const leftCard = document.getElementById(`card-${leftItem.id}`);
+            const rightCard = document.getElementById(`card-${rightItem.id}`);
+            const leftBack = document.getElementById(`back-${leftItem.id}`);
+            const rightBack = document.getElementById(`back-${rightItem.id}`);
+
+            const isCorrect = leftItem.matchId === rightItem.id;
+
+            // Preparar el reverso
+            if (isCorrect) {
+                leftBack.innerText = leftItem.feedback;
+                leftBack.className = "match-back bg-correct";
+                rightBack.innerText = "¡Correcto!";
+                rightBack.className = "match-back bg-correct";
+                
+                leftCard.classList.remove('selected-lila');
+                rightCard.classList.remove('selected-lila');
+                leftCard.classList.add('is-flipped', 'matched');
+                rightCard.classList.add('is-flipped', 'matched');
+                
+                state.matchesFound++;
+                if (state.matchesFound === 3) {
+                    document.getElementById('btn-match-next').style.display = "block";
+                }
+            } else {
+                leftBack.innerText = "❌ Incorrecto. Inténtalo nuevamente";
+                leftBack.className = "match-back bg-incorrect";
+                rightBack.innerText = "❌ No coincide";
+                rightBack.className = "match-back bg-incorrect";
+
+                leftCard.classList.remove('selected-lila');
+                rightCard.classList.remove('selected-lila');
+                leftCard.classList.add('is-flipped');
+                rightCard.classList.add('is-flipped');
+
+                // Voltear de vuelta tras 3 segundos
+                setTimeout(() => {
+                    leftCard.classList.remove('is-flipped');
+                    rightCard.classList.remove('is-flipped');
+                }, 3000);
+            }
+
+            // Resetear selección
+            state.matchingSelections = { left: null, right: null };
+        }
+
+        // --- NAVEGACIÓN GENERAL ---
+
+        function jumpTo(t) { if (phases.test.includes(state.step)) return; state.history.push(state.step); state.step = t; render(); }
         function goBack() { if (state.history.length > 0) { state.step = state.history.pop(); if (state.step === 'test_intro') state.score = 0; render(); } }
-        function goHome() { if (confirm("¿Volver al inicio?")) restartCourse(); }
+        function goHome() { if (confirm("¿Volver al inicio?")) location.reload(); }
         function retryTest() { state.testAttempts++; state.score = 0; state.step = "q1"; render(); }
         function restartCourse() { state = { step: "intro", history: [], userName: "", userDni: "", score: 0, testAttempts: 0 }; render(); }
 
